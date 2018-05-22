@@ -90,16 +90,69 @@ def migrate(s1,s2,k):
 
 ### Reaction List ###
 
-
-
-#NF-kB module
+#create all monomers and observables first
+    
     #b = binding site, s= phos site, l = localization
 Monomer('p65',['b','s','l'],{'s':['u','p'],'l':['c','n']})
 Monomer('p105_p50',['s'],{'s':['u','p']})
 Monomer('p50',['b','b_DNA','b_IkB','l'],{'l':['c','n']})
 Monomer('p105',['b'])
 Monomer('IkB',['b','s','l'],{'s':['u','p'],'l':['c','n']})
+create_monomers(['DISC','TNF','TNFR','TNFRa','MKP','TAK','TAKp','TB','PAMP','TLR','TLRa','IKK','IKKp','p38','p38p','HSP27','HSP27p','HSP27n'])
+create_monomers(['LXA4'])
+Monomer('A20',['b'])
+create_monomers(['Cox','Pol','Pol_Cox','tCox','pCox','Pol_IkB','tIkB','Pol_A20','tA20','Pol_TNF','tTNF'])
+Monomer('dIkB',['b_p50','b_Pol'])
+Monomer('dA20',['b_p50','b_Pol'])
+Monomer('dTNF',['b_p50','b_Pol'])
+Monomer('dCox',['b_p50','b_Pol'])
+Monomer('dSyt',['b_p50','b_Pol'])
+create_monomers(['tSyt','Syt','Pol_Syt'])
+create_monomers(['PLA2','PLA2p','AA','PGE2','LO','EP4','EP4a','PIP3','AKT','AKTp','LOp','EP2','EP2a','cAMP','PKA','PKAa'])
+create_monomers(['TNFR2','TNFR2a'])
 
+Observable('o_p65',p65(b=None,s='u',l='c'))
+Observable('o_p50',p50(b=None,b_DNA=None,b_IkB=None,l='c'))
+Observable('o_p105',p105(b=None))
+Observable('o_p65_p105',p65(b=1,s='u',l='c')%p105(b=1))
+Observable('o_p65_p50',p65(b=1,s='u',l='c')%p50(b=1,b_IkB=None,l='c',b_DNA=None))
+Observable('o_p65_p50n',p65(b=1,s='u',l='n')%p50(b=1,b_IkB=None,l='n',b_DNA=None))
+Observable('o_p50_p50',p50(b=1,b_DNA=None,b_IkB=None,l='c')%p50(b=1,b_DNA=None,b_IkB=None,l='c'))
+Observable('o_p50_p50n',p50(b=1,b_DNA=None,b_IkB=None,l='n')%p50(b=1,b_DNA=None,b_IkB=None,l='n'))
+Observable('o_p65n',p65(b=None,s='u',l='n'))
+Observable('o_p50n',p50(b=None,b_DNA=None,b_IkB=None,l='n'))
+Observable('o_p105_p50',p105_p50(s='u'))
+Observable('o_IkB',IkB(b=None,s='u',l='c'))
+Observable('o_IkBn',IkB(b=None,s='u',l='n'))
+Observable('o_IkB_NFkB',IkB(b=2,s='u',l='c') % p65(b=1,s='u',l='c') % p50(b=1,b_IkB=2,b_DNA=None,l='c'))
+Observable('o_IkB_NFkBn',IkB(b=2,s='u',l='n') % p65(b=1,s='u',l='n') % p50(b=1,b_IkB=2,b_DNA=None,l='n'))
+Observable('o_IKK',IKK(b=None))
+Observable('o_TAK',TAKp(b=None))
+Observable('o_TLR',TLRa(b=None))
+Observable('o_A20',A20(b=None))
+Observable('o_A20_IKK',A20(b=1)%IKK(b=1))
+Observable('o_IKKp',IKKp(b=WILD))
+Observable('o_TNF',TNF(b=WILD))
+Observable('o_NFkB',p65(b=1,s='p',l='n') % p50(b=1,b_IkB=None,b_DNA=None,l='n'))
+Observable('o_HSP27',HSP27n(b=WILD))
+Observable('o_p38',p38p(b=WILD))
+Observable('o_TNFR',TNFRa(b=WILD))
+Observable('o_LXA4',LXA4(b=None))
+Observable('o_AKT',AKTp(b=WILD))
+Observable('o_Cox',Cox(b=WILD))
+Observable('o_pCox',pCox(b=WILD))
+Observable('o_tCox',tCox(b=WILD))
+Observable('o_EP2',EP2a(b=WILD))
+Observable('o_EP4',EP4a(b=WILD))
+Observable('o_PGE2',PGE2(b=WILD))
+Observable('o_PKA',PKAa(b=WILD))
+Observable('o_Syt7',Syt(b=WILD))
+Observable('o_DISC',DISC(b=WILD))
+Observable('o_AA',AA(b=WILD))
+Observable('o_tA20',tA20(b=None))
+Observable('o_tIkB',tIkB(b=None))
+
+#NF-kB module
 
 Parameter('synth_p65_k',3*30)   #p65 synthesis rate
 Parameter('kdeg_generic',3*3e-4)    #degradation rate p65,p50,p105,all dimers,IkB,IkBp65p50
@@ -152,27 +205,13 @@ Initial(IkB(b=1,s='u',l='c') % p65(b=2,s='u',l='c') % p50(b=2,b_IkB=1,
 Initial(IkB(b=1,s='u',l='n') % p65(b=2,s='u',l='n') % p50(b=2,b_IkB=1,
         b_DNA=None,l='n'),stable_IkB_NFkBn)
 
-Observable('o_p65',p65(b=None,s='u',l='c'))
-Observable('o_p50',p50(b=None,b_DNA=None,b_IkB=None,l='c'))
-Observable('o_p105',p105(b=None))
-Observable('o_p65_p105',p65(b=1,s='u',l='c')%p105(b=1))
-Observable('o_p65_p50',p65(b=1,s='u',l='c')%p50(b=1,b_IkB=None,l='c',b_DNA=None))
-Observable('o_p65_p50n',p65(b=1,s='u',l='n')%p50(b=1,b_IkB=None,l='n',b_DNA=None))
-Observable('o_p50_p50',p50(b=1,b_DNA=None,b_IkB=None,l='c')%p50(b=1,b_DNA=None,b_IkB=None,l='c'))
-Observable('o_p50_p50n',p50(b=1,b_DNA=None,b_IkB=None,l='n')%p50(b=1,b_DNA=None,b_IkB=None,l='n'))
-Observable('o_p65n',p65(b=None,s='u',l='n'))
-Observable('o_p50n',p50(b=None,b_DNA=None,b_IkB=None,l='n'))
-Observable('o_p105_p50',p105_p50(s='u'))
-Observable('o_IkB',IkB(b=None,s='u',l='c'))
-Observable('o_IkBn',IkB(b=None,s='u',l='n'))
-Observable('o_IkB_NFkB',IkB(b=2,s='u',l='c') % p65(b=1,s='u',l='c') % p50(b=1,b_IkB=2,b_DNA=None,l='c'))
-Observable('o_IkB_NFkBn',IkB(b=2,s='u',l='n') % p65(b=1,s='u',l='n') % p50(b=1,b_IkB=2,b_DNA=None,l='n'))
+
 
 Rule('synth_p65', None >> p65(b=None,s='u',l='c'),synth_p65_k) #p65 synthesis
 Rule('deg_p65',p65(b=None,l='c') >> None, kdeg_generic) #p65 degradatio
 Rule('synth_p50',None >> p105_p50(s='u'),synth_p50_k) #p105_p50 synthesis WHAT IS THIS!!!
 Rule('p105_process',p105_p50(s='u') >> p105(b=None) + p50(b=None,b_IkB=None,b_DNA=None,l='c'),
-     p105_process_k) #p105 processing
+     p105_process_k) #62 p105 processing to p105 + p50
 Rule('deg_p105',p105(b=None) >> None,kdeg_generic) #p105 degradation
 Rule('deg_p50',p50(b=None,b_IkB=None,b_DNA=None,l='c') >> None,kdeg_generic) #p50 degradation
 Rule('bind_p65_p105',p65(b=None,l='c') + p105(b=None) | p65(b=1,l='c')%p105(b=1),
@@ -207,9 +246,6 @@ Rule('deg_IkB_NFkB',IkB(b=2,s='u',l='c') % p65(b=1,l='c') % p50(b=1,b_IkB=2,l='c
 
 
 #IKK Reactions (called inflammatory cell signaling in thesis)
-create_monomers(['DISC','TNF','TNFR','TNFRa','MKP','TAK','TAKp','TB','PAMP','TLR','TLRa','IKK','IKKp','p38','p38p','HSP27','HSP27p','HSP27n'])
-create_monomers(['LXA4'])
-Monomer('A20',['b'])
 
 Parameter('phos_p65_kf',3e-5)
 Parameter('phos_p65_kr',3e-1)
@@ -242,11 +278,7 @@ Initial(IKK(b=None),stable_IKK)
 Initial(A20(b=None),stable_A20)
 Initial(A20(b=1)%IKK(b=1),stable_A20_IKK)
 
-Observable('o_IKK',IKK(b=None))
-Observable('o_TAK',TAKp(b=None))
-Observable('o_TLR',TLRa(b=None))
-Observable('o_A20',A20(b=None))
-Observable('o_A20_IKK',A20(b=1)%IKK(b=1))
+
 
 synth_enz(TB,PAMP,1e2) #73 synth PAMP
 deg(PAMP,1e-3) #74 degrade PAMP
@@ -269,16 +301,16 @@ act2(p38p,HSP27,HSP27p,3e-6,3e-1,3e-1)
 act2(MKP,HSP27p,HSP27,3e-6,3e-1,9e-3)
 migrate2(HSP27p,HSP27n,0.1,0.001)
 
-Rule('bind_p65n_HSP27n',HSP27n(b=None) + p65(l='n',s='u') | HSP27n(b=1) % p65(l='n',s=('u',1)), phos_p65_kf, phos_p65_kr)
+Rule('bind_p65n_HSP27n',HSP27n(b=None) + p65(l='n',s='u') | 
+        HSP27n(b=1) % p65(l='n',s=('u',1)), phos_p65_kf, phos_p65_kr)
 Rule('cat_p65n_HSP27n',HSP27n(b=1) % p65(s=('u',1)) >> HSP27n(b=None) + p65(s='p'),phos_p65_kc)
 
-cp = []
-cp.append((IKKp(b=1)%IkB(b=None,l='c',s=('u',1)),IkB(b=None,l='c',s='u')))
-cp.append((IKKp(b=1) % IkB(b=2, s=('u', 1), l='c') % p50(b=3, b_DNA=None, b_IkB=2, l='c') % p65(b=3, s='u', l='c'), IkB(b=1, s='u', l='c') % p50(b=2, b_DNA=None, b_IkB=1, l='c') % p65(b=2, s='u', l='c')))
-cp.append((IKKp(b=1) % IkB(b=2, s=('u', 1), l='c') % p50(b=3, b_DNA=None, b_IkB=2, l='c') % p65(b=3, s='p', l='c'), IkB(b=1, s='u', l='c') % p50(b=2, b_DNA=None, b_IkB=1, l='c') % p65(b=2, s='p', l='c')))
-
-
 # =============================================================================
+# cp = []
+# cp.append((IKKp(b=1) % IkB(b=None,l='c',s=('u',1)),IkB(b=None,l='c',s='u')))
+# cp.append((IKKp(b=1) % IkB(b=2, s=('u', 1), l='c') % p50(b=3, b_DNA=None, b_IkB=2, l='c') % p65(b=3, s='u', l='c'), IkB(b=1, s='u', l='c') % p50(b=2, b_DNA=None, b_IkB=1, l='c') % p65(b=2, s='u', l='c')))
+# cp.append((IKKp(b=1) % IkB(b=2, s=('u', 1), l='c') % p50(b=3, b_DNA=None, b_IkB=2, l='c') % p65(b=3, s='p', l='c'), IkB(b=1, s='u', l='c') % p50(b=2, b_DNA=None, b_IkB=1, l='c') % p65(b=2, s='p', l='c')))
+# 
 # subs=0
 # for w in cp:
 # 	subs=subs+1
@@ -287,38 +319,32 @@ cp.append((IKKp(b=1) % IkB(b=2, s=('u', 1), l='c') % p50(b=3, b_DNA=None, b_IkB=
 # 	Extra(w[1],'-x*y/(a+b*z)',{IKKp(b=None):'x',w[1]:'y',LXA4(b=None):'z'},{IKKp_kf:'a',inh_LXA4:'b'},'IKKp_3_' + str(subs))
 # 
 # =============================================================================
+
 # Rewrite Robert's Extra as Expression
 
-sd = {'x': IKKp(b=None) ,'y': w[1], 'z': LXA4(b=None)}
-pd = {'a': IKKp_kf, 'b': inh_LXA4}
+Expression('IKKp_IkB_kf_LXA4', 1/(IKKp_kf+inh_LXA4*o_LXA4))
+Rule('bind_IKKp_IkB_LXA4', IKKp(b=None) + IkB(l='c',s='u') | 
+        IKKp(b=1)%IkB(l='c',s=('u',1)), IKKp_IkB_kf_LXA4, kinase_kr_generic) #replaces rule 92, note IkB(b) is not defined)
+#Rule('bind_IKKp_IkB', IKKp(b=None) + IkB(l='c',s='u') | IKKp(b=1) % 
+#     IkB(l='c',s=('u',1)), IKKp_IkB_kf, kinase_kr_generic) #92 IKKp-Ikb binding (kf set to 0)
 
-Expression('test2', IKKp(b=1)%IkB(b=None,l='c',s=('u',1))+IkB(b=None,l='c',s='u'))
-Expression('IKKp_1_2', sd['x']*sd['y']/(pd['a']+pd['b']*sd['z']))
-
-
-
-
-Rule('bind_IKKp_IkB', IKKp(b=None) + IkB(l='c',s='u') | IKKp(b=1) % IkB(l='c',s=('u',1)), IKKp_IkB_kf, kinase_kr_generic) #92
-Rule('cat_IKKp_IkB', IKKp(b=1) % IkB(l='c',s=('u',1)) >> IKKp(b=None) + IkB(l='c',s='p'), kinase_kc_generic)
-Rule('bind_IKKp_p105', IKKp(b=None) + p105_p50(s='u') | IKKp(b=1) % p105_p50(s=('u',1)), IKKp_p105_kf, kinase_kr_generic)
-Rule('cat_IKKp_p105', IKKp(b=1) % p105_p50(s=('u',1)) >> IKKp(b=None) + p105_p50(s='p'), kinase_kc_generic)
-Rule('p105p_process',p105_p50(s='p') >> p105(b=None) + p50(b=None,b_IkB=None,b_DNA=None,l='c'), p105p_process_k)
-Rule('deg_IkBp',IkB(b=None,s='p',l='c') >> None, deg_IkBp_k)
-Rule('deg_IkBp_bound',IkB(b=2,s='p',l='c') % p65(b=1,l='c') % p50(b=1,b_IkB=2,l='c') >> p65(b=1,l='c') % p50(b=1,b_IkB=None,l='c'), deg_IkBp_k)
-Rule('bind_A20',IKK(b=None) + A20(b=None) | IKK(b=1) % A20(b=1), bind_A20_kf, bind_A20_kr)
+Rule('cat_IKKp_IkB', IKKp(b=1) % IkB(l='c',s=('u',1)) >> IKKp(b=None) + IkB(l='c',s='p'), kinase_kc_generic) #92
+Rule('bind_IKKp_p105', IKKp(b=None) + p105_p50(s='u') | 
+        IKKp(b=1) % p105_p50(s=('u',1)), IKKp_p105_kf, kinase_kr_generic) #93 IKKp-p105 binding
+Rule('cat_IKKp_p105', IKKp(b=1) % p105_p50(s=('u',1)) >> IKKp(b=None) + p105_p50(s='p'), kinase_kc_generic) #93
+Rule('p105p_process',p105_p50(s='p') >> p105(b=None) + p50(b=None,b_IkB=None,b_DNA=None,l='c'), p105p_process_k) #NOT IN THESIS
+Rule('deg_IkBp',IkB(b=None,s='p',l='c') >> None, deg_IkBp_k) #94 degrade IkBp
+Rule('deg_IkBp_bound',IkB(b=2,s='p',l='c') % p65(b=1,l='c') % p50(b=1,b_IkB=2,l='c') >> 
+     p65(b=1,l='c') % p50(b=1,b_IkB=None,l='c'), deg_IkBp_k) #96 p65:p50 release from IkBp
+Rule('bind_A20',IKK(b=None) + A20(b=None) | IKK(b=1) % A20(b=1), bind_A20_kf, bind_A20_kr) #85 A20 IKK binding
 synth(IKK,3*30) #86 synth IKK
 deg(IKKp,3*3e-4) #83 degrade IKKp
 deg(IKK,3*3e-4) #83 degrade IKK
 Rule('deg_IKK_A20',IKK(b=1) % A20(b=1) >> None, kdeg_generic) #83 degrade IKK:A20
 
+
+
 #Gene Expression
-create_monomers(['Cox','Pol','Pol_Cox','tCox','pCox','Pol_IkB','tIkB','Pol_A20','tA20','Pol_TNF','tTNF'])
-Monomer('dIkB',['b_p50','b_Pol'])
-Monomer('dA20',['b_p50','b_Pol'])
-Monomer('dTNF',['b_p50','b_Pol'])
-Monomer('dCox',['b_p50','b_Pol'])
-Monomer('dSyt',['b_p50','b_Pol'])
-create_monomers(['tSyt','Syt','Pol_Syt'])
 
 Parameter('Pol_kr',3*.1)
 Parameter('Pol_kc',3*.1)
@@ -364,8 +390,7 @@ Initial(dCox(b_p50=None,b_Pol=None),init_DNA)
 Initial(dSyt(b_p50=None,b_Pol=None),init_DNA)
 
 
-Observable('o_tA20',tA20(b=None))
-Observable('o_tIkB',tIkB(b=None))
+
 
 
 #IkB transcription
@@ -411,8 +436,8 @@ Rule('bind_p50_dCox', dCox(b_p50=None) + p50(l='n',b=ANY,b_IkB=None,b_DNA=None) 
         dCox(b_p50=1) % p50(l='n',b=ANY,b_IkB=None,b_DNA=1), p50_Cox_kf, p50_DNA_kr_generic)
 Rule('bind_Pol_dCox',Pol(b=None) + dCox(b_Pol=None,b_p50=2) % p65(b=1,s='u') % p50(b=1,b_DNA=2) | 
         Pol(b=3) % dCox(b_Pol=3,b_p50=2) % p65(b=1,s='u') % p50(b=1,b_DNA=2), Pol_dCox_kf,Pol_kr)
-Rule('bind_Pol_dCox_p',Pol(b=None) + dCox(b_Pol=None,b_p50=2) % p65(b=1,s='p') % p50(b=1,b_DNA=2) | P
-     ol(b=3) % dCox(b_Pol=3,b_p50=2) % p65(b=1,s='p') % p50(b=1,b_DNA=2), Pol_dCox_p_kf,Pol_kr)
+Rule('bind_Pol_dCox_p',Pol(b=None) + dCox(b_Pol=None,b_p50=2) % p65(b=1,s='p') % p50(b=1,b_DNA=2) | 
+        Pol(b=3) % dCox(b_Pol=3,b_p50=2) % p65(b=1,s='p') % p50(b=1,b_DNA=2), Pol_dCox_p_kf,Pol_kr)
 Rule('cat_Pol_dCox',Pol(b=3) % dCox(b_Pol=3,b_p50=2) % p65(b=1) % p50(b=1,b_DNA=2) >> 
      Pol_Cox(b=None) + dCox(b_Pol=None,b_p50=2) % p65(b=1) % p50(b=1,b_DNA=2), Pol_kc)
 Rule('transcribe_Cox',Pol_Cox(b=None) >> Pol(b=None) + tCox(b=None), transcribe_k)
@@ -439,8 +464,6 @@ Rule('deg_Syt',Syt(b=None) >> None, deg_Syt_k)
 
 
 #Cox Reactions
-create_monomers(['PLA2','PLA2p','AA','PGE2','LO','EP4','EP4a','PIP3','AKT','AKTp','LOp','EP2','EP2a','cAMP','PKA','PKAa'])
-create_monomers(['TNFR2','TNFR2a'])
 
 #initial parameters
 Parameter('PLA2_0',1e5)
@@ -498,21 +521,4 @@ for m in model.monomers:
 				sites[s] = None
 		Initial(m(sites), ic_param)
 
-Observable('o_IKKp',IKKp(b=WILD))
-Observable('o_TNF',TNF(b=WILD))
-Observable('o_NFkB',p65(b=1,s='p',l='n') % p50(b=1,b_IkB=None,b_DNA=None,l='n'))
-Observable('o_HSP27',HSP27n(b=WILD))
-Observable('o_p38',p38p(b=WILD))
-Observable('o_TNFR',TNFRa(b=WILD))
-Observable('o_LXA4',LXA4(b=None))
-Observable('o_AKT',AKTp(b=WILD))
-Observable('o_Cox',Cox(b=WILD))
-Observable('o_pCox',pCox(b=WILD))
-Observable('o_tCox',tCox(b=WILD))
-Observable('o_EP2',EP2a(b=WILD))
-Observable('o_EP4',EP4a(b=WILD))
-Observable('o_PGE2',PGE2(b=WILD))
-Observable('o_PKA',PKAa(b=WILD))
-Observable('o_Syt7',Syt(b=WILD))
-Observable('o_DISC',DISC(b=WILD))
-Observable('o_AA',AA(b=WILD))
+
