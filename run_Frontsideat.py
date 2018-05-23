@@ -1,4 +1,4 @@
-import Frontside as m
+import Frontside_copy as m
 import pylab as pl
 import numpy as np
 from pysb.integrate import *
@@ -15,7 +15,7 @@ def qparams(list):
                 tag = False
 
         if tag:
-            print i
+            print(i)
 
 
 def chg_val(param, k):
