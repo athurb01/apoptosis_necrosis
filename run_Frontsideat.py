@@ -1,4 +1,4 @@
-import Frontside_copy as m
+import Frontsideat as m
 import pylab as pl
 import numpy as np
 from pysb.integrate import *

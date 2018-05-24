@@ -1,7 +1,7 @@
 from pysb import *
 import numpy as np
 
-Model()
+model = Model('Frontsideat')
 
 ###Initial Conditions###
 

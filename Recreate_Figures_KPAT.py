@@ -155,15 +155,15 @@ scan_custom(m.p38p_HSP27_b_kf,[-7,-5],'o_Cox')
 
 ###Figure 9(b). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
-chg_val(p38p_HSP27_b_kf,3e-6)
+chg_val(m.p38p_HSP27_b_kf,3e-6)
 
 scan_custom(m.synth_PIP3_k,[-4,0],'o_Cox')
 
 ###Figure 10(a). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside import *
+from run_Frontsideat import *
 
 chg_val(m.LO_AA_b_kf,1e-5)
 
@@ -181,9 +181,11 @@ graph('o_LXA4',prep_fig=False)
 
 chg_val(m.LO_0,1e3)
 
+graph('o_LXA4',prep_fig=False)
+
 ###Figure 10(b). Requires Frontside.py and run_Frontside.py
 
-from run_Frontsideat.py import *
+from run_Frontsideat import *
 
 chg_val(m.LO_0,1e3)
 
@@ -218,11 +220,11 @@ s.run()
 output = s.yobs['o_PGE2'] + s.yobs['o_EP2'] + s.yobs['o_EP4']
 
 pl.plot(t/3600,output)
-graph('o_LXA4',prep_fig=False)
+graph('o_PGE2',prep_fig=False)
 
 ###Figure 10(c). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 chg_val(m.LO_0,1e3)
 
@@ -242,7 +244,7 @@ graph('o_NFkB',prep_fig=False)
 
 ###Figure 11. Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 LO_wrap([3,5],'o_NFkB',norm=True)
 
