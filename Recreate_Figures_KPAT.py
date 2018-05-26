@@ -262,7 +262,7 @@ LO_wrap([3,5],'o_DISC',norm=True)
 
 ###Figure 12(a). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 chg_val(m.synth_AA_k, 0.05)
 
@@ -278,7 +278,7 @@ comp_LO_PGE2([3,5])
 
 ###Figure 12(b). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 chg_val(m.synth_AA_k, 0.05)
 
@@ -294,7 +294,7 @@ LO_wrap([3,5],'o_LXA4')
 
 ###Figure 12(c). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 chg_val(m.synth_AA_k, 0.05)
 
@@ -310,7 +310,7 @@ LO_wrap([3,5],'o_PKA')
 
 ###Figure 12(d). Requires Frontside.py and run_Frontside.py
 
-from run_Frontside.py import *
+from run_Frontsideat import *
 
 chg_val(m.synth_AA_k, 0.05)
 
