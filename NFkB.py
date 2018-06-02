@@ -100,18 +100,20 @@ def migrate_mono(s1,s2,k):
 
 #monomers
 Monomer('IKK', ['b','s'], {'s':['n','a','i']})
+Monomer('NFkB',['b'])
 #Monomer('p65',['b','s','l'],{'s':['u','p'],'l':['c','n']})
 #Monomer('p105_p50',['s'],{'s':['u','p']})
 #Monomer('p50',['b','b_DNA','b_IkB','l'],{'l':['c','n']})
 #Monomer('p105',['b'])
-#Monomer('NFkB',['b','s'])
+
 #Monomer('IkB',['b','s','l'],{'s':['u','p'],'l':['c','n']})
 #create_monomers(['TNF','TLR','TLRa'])
 
 #observables
-Observable('o_IKKn',IKK(b=None,s='n'))
-Observable('o_IKKa',IKK(b=None,s='a'))
-Observable('o_IKKi',IKK(b=None,s='i'))
+Observable('o_neut_IKK',IKK(b=None,s='n'))
+Observable('o_act_IKK',IKK(b=None,s='a'))
+Observable('o_inact_IKK',IKK(b=None,s='i'))
+Observable('o_NFkB', NFkB(b=None))
 
 
 #volume calculations
@@ -129,6 +131,8 @@ numsa = 4*pi*(r_nuc**2) #m^2
 plmv = (plmsa*10e-9)*1000 # L SA in m^2 x 10 nm thickness times 1000 (m^3 to L)
 numv = (numsa*10e-9)*1000 # L
 
+
+
 Parameter('cell_vol',cv) # in Litres
 Parameter('nuc_vol', nv) # in Litres
 Parameter('cyt_vol', cytv) # in Litres
@@ -144,15 +148,19 @@ Compartment('nuc', dimension=3, size=nuc_vol, parent=nuc_mem)
 
 #initial conditions parameters
 Parameter('NFkB_0', 124781) #chose middle range value 0.3 uM from Suzan's model and converted to molecules (0.3e-6*avagodro*cytVol)
-
+Parameter('neut_IKK_0', 100000) # .08e-6*AvN*cytv
+Parameter('act_IKK_0', 0)
+Parameter('inact_IKK_0', 0) 
 #initial conditions
+Initial(IKK(b=None, s='n')**cyt, neut_IKK_0)
+Initial(NFkB(b=None)**cyt, NFkB_0)
 
 #rate constant parameters
-Parameter('IKK_act', 0) # ka, set to 0.001 when TNF present, 1/s
+Parameter('IKK_act', 0.001) # ka, set to 0.001 when TNF present, 1/s
 Parameter('IKK_inact', 0.003) #ki, 1/s
 Parameter('IKK_neut', 0.0006) #ki, 1/s
 
 #reaction rules
 Rule('act_IKK', IKK(b=None, s='n')**cyt >> IKK(b=None, s='a')**cyt, IKK_act) # IKK activation
 Rule('inact_IKK', IKK(b=None, s='a')**cyt >> IKK(b=None, s='i')**cyt, IKK_inact) # IKK inactivation
-Rule('inact_IKK', IKK(b=None, s='i')**cyt >> IKK(b=None, s='n')**cyt, IKK_neut) #IKK return to neutral
+Rule('neut_IKK', IKK(b=None, s='i')**cyt >> IKK(b=None, s='n')**cyt, IKK_neut) #IKK return to neutral

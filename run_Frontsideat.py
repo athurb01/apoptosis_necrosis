@@ -2,7 +2,8 @@ import Frontsideat as m
 import pylab as pl
 import numpy as np
 from pysb.integrate import *
-tmax = 24
+tmax = 24 #time simulation in hours
+emax = 24 #time equilibration in hours
 t = pl.linspace(0, 3600 * tmax)
 s = Solver(m.model, t)
 s.run()
