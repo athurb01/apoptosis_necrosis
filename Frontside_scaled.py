@@ -158,15 +158,15 @@ Parameter('synth_p65_k',3*30)   #p65 synthesis rate
 Parameter('kdeg_generic',3*3e-4)    #degradation rate p65,p50,p105,all dimers,IkB,IkBp65p50
 Parameter('synth_p50_k',3*15)
 Parameter('p105_process_k',3*3e-4) 
-Parameter('kf_generic',3*1e-6) #NFkB dimer binding
-Parameter('kr_generic',3*1e-3) #NFkB dimer dissociation
-Parameter('mig_n_generic',3*0.0026) #nuc import
-Parameter('mig_c_generic',3*0.00052) #nuc export
-Parameter('mig_n_IkB',3*0.00067) #IkB nuc transport
-Parameter('mig_c_IkB',3*0.000335) #IkB nuc export
+Parameter('kf_generic',3*1e-6) #NFkB dimer binding, DOES NOT MATCH TSUI HOFFMANN BY 10e-2
+Parameter('kr_generic',3*1e-3) #NFkB dimer dissociation DOES NOT MATCH HOFFMAN BY 10e-1
+Parameter('mig_n_generic',0.0026) #nuc import
+Parameter('mig_c_generic',0.000052) #nuc export
+Parameter('mig_n_IkB',0.00067) #IkB nuc transport
+Parameter('mig_c_IkB',0.000335) #IkB nuc export
 Parameter('bind_IkB_kf',3*4e-7) # IkB + p65:p50 binding
-Parameter('bind_IkB_kr',3*5e-4) # IkB + p65:p50 dissociation
-Parameter('mig_IkB_NFkB_k',3*0.01) #IkB:p65:p50 nuc export
+Parameter('bind_IkB_kr',0.05) # IkB + p65:p50 dissociation #SCALED VERY WRONG
+Parameter('mig_IkB_NFkB_k',0.01) #IkB:p65:p50 nuc export
 
 # initial value parameters, let model reach equilibrium w/o IKK act
 Parameter('stable_p65',0)
@@ -355,7 +355,7 @@ Parameter('p50_DNA_kr_generic',3*1e-1)
 Parameter('Pol_dIkB_kf',3*5.25e-7)
 Parameter('Pol_dA20_kf',3*1e-5)
 Parameter('deg_tA20_k',3*1e-3)
-Parameter('deg_A20_k',3*3e-4)
+Parameter('deg_A20_k',3*3e-4) #A20 protein and transcript degradation reveresed compared to Gaudet
 Parameter('p50_TNF_kf',8e-7)
 Parameter('Pol_dTNF_kf',3*1.6e-8)
 Parameter('Pol_dTNF_p_kf',3*1.6e-6)
@@ -504,9 +504,6 @@ deg(TNFR2a,1e-3)
 act3(TNF,TNFR2,TNFR2a,1e-7,1e-1,1e-1)
 synth(TNF,0)
 
-### adding rule to have activation constant
-#Parameter('IKK_on', .000)
-#Rule('IKK_active', IKK(b=None) >> IKKp(b=None), IKK_on)
 
 ######## create initial conditions ###########
 

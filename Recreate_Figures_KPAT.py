@@ -153,6 +153,10 @@ chg_val(m.LO_AA_b_kf, 1e-08)
 
 scan_custom(m.p38p_HSP27_b_kf,[-7,-5],'o_Cox')
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '9a' + ".pdf", dpi = 300)
+
 ###Figure 9(b). Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -160,6 +164,9 @@ from run_Frontsideat import *
 chg_val(m.p38p_HSP27_b_kf,3e-6)
 
 scan_custom(m.synth_PIP3_k,[-4,0],'o_Cox')
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '9b' + ".pdf", dpi = 300)
 
 ###Figure 10(a). Requires Frontside.py and run_Frontside.py
 
@@ -182,6 +189,10 @@ graph('o_LXA4',prep_fig=False)
 chg_val(m.LO_0,1e3)
 
 graph('o_LXA4',prep_fig=False)
+
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '10a' + ".pdf", dpi = 300)
 
 ###Figure 10(b). Requires Frontside.py and run_Frontside.py
 
@@ -222,6 +233,10 @@ output = s.yobs['o_PGE2'] + s.yobs['o_EP2'] + s.yobs['o_EP4']
 pl.plot(t/3600,output)
 graph('o_PGE2',prep_fig=False)
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '10b' + ".pdf", dpi = 300)
+
 ###Figure 10(c). Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -242,6 +257,11 @@ chg_val(m.LO_0,1e5)
 
 graph('o_NFkB',prep_fig=False)
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '10c' + ".pdf", dpi = 300)
+
+
 ###Figure 11. Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -260,6 +280,10 @@ LO_wrap([3,5],'o_PKA',norm=True)
 
 LO_wrap([3,5],'o_DISC',norm=True)
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '11' + ".pdf", dpi = 300)
+
 ###Figure 12(a). Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -275,6 +299,9 @@ comp_LO_PGE2([3,5])
 chg_val(m.synth_AA_k, 0.002)
 
 comp_LO_PGE2([3,5])
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '12a' + ".pdf", dpi = 300)
 
 ###Figure 12(b). Requires Frontside.py and run_Frontside.py
 
@@ -292,6 +319,10 @@ chg_val(m.synth_AA_k, 0.002)
 
 LO_wrap([3,5],'o_LXA4')
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '12b' + ".pdf", dpi = 300)
+
 ###Figure 12(c). Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -308,6 +339,10 @@ chg_val(m.synth_AA_k, 0.002)
 
 LO_wrap([3,5],'o_PKA')
 
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '12c' + ".pdf", dpi = 300)
+
 ###Figure 12(d). Requires Frontside.py and run_Frontside.py
 
 from run_Frontsideat import *
@@ -323,6 +358,10 @@ LO_wrap([3,5],'o_Syt7')
 chg_val(m.synth_AA_k, 0.002)
 
 LO_wrap([3,5],'o_Syt7')
+
+#pl.savefig(r"C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\NFKB_Modeling\
+#           apoptosis_necrosis\version_AT_py3\Fontside_scaled_plots\\"
+#           + '12d' + ".pdf", dpi = 300)
 
 ###Figure 13. Requires FullModel.py and run_FullModel.py
 
@@ -526,3 +565,5 @@ time_to_nec([3.0,6.0],'g', 1000000.0, 1000000.0)
 time_to_nec([3.0,6.0],'k', 750000.0, 1000000.0)
 time_to_nec([3.0,6.0], 'b', 500000.0, 1000000.0)
 time_to_nec([3.0,6.0],'k', 250000.0, 1000000.0)
+
+

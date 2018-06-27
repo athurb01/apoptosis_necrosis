@@ -3,7 +3,6 @@ import pylab as pl
 import numpy as np
 from pysb.integrate import *
 tmax = 24 #time simulation in hours
-emax = 24 #time equilibration in hours
 t = pl.linspace(0, 3600 * tmax)
 s = Solver(m.model, t)
 s.run()
@@ -33,6 +32,7 @@ def graph(obs, prep_fig = True):
 
 def stable_kB(init_IKK = 100000.0, run = False):
     chg_val(m.TB_0, 0)
+    chg_val(m.IKK_on, 0)
     list = []
     list2 = []
     for i in m.model.parameters:
@@ -49,7 +49,8 @@ def stable_kB(init_IKK = 100000.0, run = False):
     for i in range(len(list)):
         chg_val(list[i], s.yobs['o_' + list2[i]][-1])
 
-    chg_val(m.TB, 1)
+    #chg_val(m.TB_0, 1)
+    chg_val(m.IKK_on, .001)
     chg_val(m.AKTp_IKK_b_kf, 1e-05)
     chg_val(m.TNFRa_TAK_b_kf, 1e-07)
     if run:
@@ -199,4 +200,3 @@ def comp_LO_PGE2(range, norm = False):
 
 
 stable_kB()
-
