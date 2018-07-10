@@ -23,11 +23,17 @@ t = pl.linspace(0, 3600 * tend)
 
 # to equilibrate and use equilibration values as initial for simulation
 sim = ScipyOdeSimulator(m.model, te)
-res = sim.run()
-df_equil = res.dataframe
+# no IkBa degradation
+equil_dict = {'kact_IKK':0}
+eq_res = sim.run(param_values = equil_dict)
+df_equil = eq_res.dataframe
 df_equil.plot() #will plot all species
-eq = df_equil.iloc[-1, 0:length(model.species)] #grabs species and not obervables
-#sim.run(initials = eq, param_values = param_dict, tspan = time_vector)
+eq = df_equil.iloc[-1, 0:len(m.model.species)] #grabs species and not obervables
+param_dict = {'kact_IKK': 0.001}
+sim_res = sim.run(initials = eq, param_values = param_dict, tspan = t)
+df_sim = sim_res.dataframe
+df_sim.plot()
+
 ## to reset index so sim time continues from end equilibration
 #df.index + emax
 # pd.concat(df_equil, df_sim)
