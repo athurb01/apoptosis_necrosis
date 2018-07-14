@@ -14,7 +14,7 @@ from pysb import *
 from pysb.macros import *
 import numpy as np
 
-model = Model('NFkB_D2FC')
+model = Model('D2FC_p50')
 
 ### Helper Functions ###
 
@@ -50,7 +50,8 @@ Compartment('nuc', dimension=3, size=nuc_vol, parent=nuc_mem)
 
 #monomers
 Monomer('IKK', ['b','s'], {'s':['n','a','i']})
-Monomer('NFkB',['b'])
+Monomer('RelA',['b', 'd'])
+Monomer('p50',['b', 'd'])
 Monomer('IkBa', ['b','s'], {'s':['u','p']})
 Monomer('tIkBa')
 Monomer('A20')
@@ -63,8 +64,8 @@ Monomer('tComp')
 Observable('o_neut_IKKc',IKK(b=None,s='n')**cyt)
 Observable('o_act_IKKc',IKK(b=None,s='a')**cyt)
 Observable('o_inact_IKKc',IKK(b=None,s='i')**cyt)
-Observable('o_NFkB_cyt', NFkB(b=None)**cyt)
-Observable('o_NFkB_nuc', NFkB(b=None)**nuc)
+Observable('o_RelA_cyt', NFkB(b=None)**cyt)
+Observable('o_RelA_nuc', NFkB(b=None)**nuc)
 Observable('o_IkBa_cyt', IkBa(b=None, s='u')**cyt)
 Observable('o_IkBa_nuc', IkBa(b=None, s='u')**nuc)
 Observable('o_IkBa_p', IkBa(b=None, s='p'))
@@ -81,8 +82,7 @@ Observable('o_Comp_nuc', Comp()**nuc)
 #initial conditions parameters
 Parameter('IkBaNFkB_0', 374353) #chose middle range value 0.3 uM from Suzan's model and converted to molecules (0.3e-6*avagodro*cytVol)
 Parameter('neut_IKK_0', 100000) # .08e-6*AvN*cytv
-Parameter('act_IKK_0', 0)
-Parameter('inact_IKK_0', 0) 
+ 
 
 #initial conditions
 Initial(IKK(b=None, s='n')**cyt, neut_IKK_0)
