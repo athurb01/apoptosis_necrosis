@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May 30 16:05:11 2018
+Created on Fri Jul 20 13:47:10 2018
 
 @author: Amy Thurber
 """
+
 # Robert has rules based model of NFkB based on the Gaudet D2FC model
 # However, there seem to be some problems with how he handles compartments
 # This is an attempt to create NFkB rules model using PYSB compartments 
@@ -14,7 +15,7 @@ from pysb import *
 from pysb.macros import *
 import numpy as np
 
-model = Model('D2FC_p50')
+model = Model('test')
 
 ### Helper Functions ###
 
@@ -60,48 +61,36 @@ Monomer('tTarget')
 Monomer('tp50')
 
 #observables
-#IKK
 Observable('o_neut_IKKc', IKK(b=None,s='n')**cyt)
 Observable('o_act_IKKc', IKK(b=None,s='a')**cyt)
 Observable('o_inact_IKKc',IKK(b=None,s='i')**cyt)
-#monomers
 Observable('o_RelAm_cyt', RelA(b=None, d=None)**cyt)
 Observable('o_RelAm_nuc', RelA(b=None, d=None)**nuc)
 Observable('o_p50m_nuc', p50(b=None, d=None)**nuc)
 Observable('o_p50m_cyt', p50(b=None, d=None)**cyt)
-#dimers free
-Observable('o_A50_cyt', (RelA(b=None, d=1)%p50(b=None, d=1))**cyt)
-Observable('o_A50_nuc', (RelA(b=None, d=1)%p50(b=None, d=1))**nuc)
-Observable('o_AA_cyt', (RelA(b=None, d=1)%RelA(b=None, d=1))**cyt)
-Observable('o_AA_nuc', (RelA(b=None, d=1)%RelA(b=None, d=1))**nuc)
-Observable('o_p5050_cyt', (p50(b=None, d=1)%p50(b=None, d=1))**cyt)
-Observable('o_p5050_nuc', (p50(b=None, d=1)%p50(b=None, d=1))**nuc)
-#IkBa
+Observable('o_A50_cyt', RelA(b=None, d=1)%p50(b=None, d=1)**cyt)
+Observable('o_A50_nuc', RelA(b=None, d=1)%p50(b=None, d=1)**nuc)
+Observable('o_AA_cyt', RelA(b=None, d=1)%RelA(b=None, d=1)**cyt)
+Observable('o_AA_nuc', RelA(b=None, d=1)%RelA(b=None, d=1)**nuc)
+Observable('o_p5050_cyt', p50(b=None, d=1)%p50(b=None, d=1)**cyt)
+Observable('o_p5050_nuc', p50(b=None, d=1)%p50(b=None, d=1)**nuc)
 Observable('o_IkBa_cyt', IkBa(b=None, s='u')**cyt)
 Observable('o_IkBa_nuc', IkBa(b=None, s='u')**nuc)
 Observable('o_IkBa_p', IkBa(b=None, s='p'))
-Observable('o_IkBab_p', IkBa(b=ANY, s='p'))
-#IkBa bound
-Observable('o_IkBaA50_cyt', (IkBa(b=2, s='u')%RelA(b=2, d=1)%p50(b=None, d=1))**cyt)
-Observable('o_IkBaA50_nuc', (IkBa(b=2, s='u')%RelA(b=2, d=1)%p50(b=None, d=1))**nuc)
-Observable('o_IkBaAA_cyt', (IkBa(b=2, s='u')%RelA(b=2, d=1)%RelA(b=None, d=1))**cyt)
-Observable('o_IkBaAA_nuc', (IkBa(b=2, s='u')%RelA(b=2, d=1)%RelA(b=None, d=1))**nuc)
-Observable('o_IkBap5050_cyt', (IkBa(b=2, s='u')%p50(b=2, d=1)%p50(b=None, d=1))**cyt)
-Observable('o_IkBap5050_nuc', (IkBa(b=2, s='u')%p50(b=2, d=1)%p50(b=None, d=1))**nuc)
-#transcripts and products
+Observable('o_IkBaNFkB_cyt', (IkBa(b=1, s='u')%RelA(b=1))**cyt)
+Observable('o_IkBaNFkB_nuc', (IkBa(b=1, s='u')%RelA(b=1))**nuc)
 Observable('o_tIkBa', tIkBa()**cyt)
 Observable('o_tA20', tA20()**cyt)
 Observable('o_A20', A20()**cyt)
 Observable('o_tTarget', tTarget()**cyt)
-Observable('o_tp50', tp50()**cyt)
+Observable('o_tComp', tp50()**nuc)
 
 
 
 #initial conditions parameters
-#chose middle range starting NFkB value 0.3 uM from Suzan's model and converted to molecules (0.3e-6*avagodro*cytVol)
-Parameter('IkBa_0', 622000) #from D2FC, took equilibrium total IkBa
-Parameter('RelA_0', 374353) #equal to 0.3 uM
-Parameter('p50_0', 374353) #set same as RelA
+Parameter('IkBa_0', 374353) #chose middle range value 0.3 uM from Suzan's model and converted to molecules (0.3e-6*avagodro*cytVol)
+Parameter('RelA_0', 374353)
+Parameter('p50_0', 374353)
 Parameter('neut_IKK_0', 100000) # .08e-6*AvN*cytv
  
 
@@ -177,29 +166,11 @@ Parameter('dbind_p5050', 24579)
 Parameter('dbind_Targ_p5050', 12289.5)
 
 #replace expressions
-#Parameter('ktran_IkBa', 0)
-#Parameter('ktran_A20', 0)
-#Parameter('ktran_Target', 0)
-#Parameter('ktran_p50', 0)
-#Parameter('kneut_IKK', 0)
-
-#expressions
-Expression('ktran_IkBa', 8.430996e10*(((o_A50_nuc/24579)**2 + (o_AA_nuc/24579)**2)/((o_A50_nuc/24579)**2 + (o_AA_nuc/24579)**2 + 1))) # Hill rate constant for IkBa transcription h=2, k1 = 0.065, kr=0, c1a = (c1a*1e-6)(AvN) 
-Expression('ktran_A20', 1.204428e11*(((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3)/((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3 + ((o_p5050_nuc/dbind_p5050)**3) + 1))) #h =3, k1 = (0.065*1e-6)*AvN*nv, kr = 0.065, c1 = 
-Expression('ktran_Target', 1.204428e11*(((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3)/((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3 + (o_p5050_nuc/dbind_Targ_p5050)**3 + 1))) #h =3, k1 = 0.065, kr = 0.065
-Expression('ktran_p50', 8.430996e10*(((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3)/((o_A50_nuc/dbind_A50)**3 + (o_AA_nuc/dbind_AA)**3 + (o_p5050_nuc/dbind_p5050)**3 + 1))) #h =3, k1 = 0.065, kr = 0.065
-  
-Expression('kneut_IKK', 0.0006*(2246.12/(2246.12+o_A20)))
-
-
-# with D2FC numbers=====================================================
-# Expression('ktran_IkBa', 3.702e-13*((o_NFkB_nuc/0.065)**2/((o_NFkB_nuc/0.065)**2 + 1))) # Hill rate constant for IkBa transcription h=2, k1 = 0.065, kr=0, c1a = c1a/(AvN*nv) 
-# Expression('ktran_A20', 5.289e-13*((o_NFkB_nuc/0.065)**3/((o_NFkB_nuc/0.065)**3 + o_Comp_nuc*((o_Comp_nuc/0.065)**3) + 1))) #h =3, k1 = 0.065, kr = 0.065
-# Expression('ktran_Target', 5.289e-13*((o_NFkB_nuc/0.065)**3/((o_NFkB_nuc/0.065)**3 + o_Comp_nuc*(o_Comp_nuc/0.065)**3 + 1))) #h =3, k1 = 0.065, kr = 0.065
-# Expression('ktran_Comp', 3.702e-13*((o_NFkB_nuc/0.065)**3/((o_NFkB_nuc/0.065)**3 + o_Comp_nuc*(o_Comp_nuc/0.065)**3 + 1))) #h =3, k1 = 0.065, kr = 0.065
-# 
-# =============================================================================
-#reaction rules
+Parameter('ktran_IkBa', 0)
+Parameter('ktran_A20', 0)
+Parameter('ktran_Target', 0)
+Parameter('ktran_p50', 0)
+Parameter('kneut_IKK', 0)
 
 #dimerization
 Rule('bind_RelA_RelA', RelA(b=None, d=None) + RelA(b=None, d=None) |
@@ -271,4 +242,3 @@ Rule('tran_p50', None >> tp50()**cyt, ktran_p50) #Competitor mRNA transcription
 Rule('synth_p50', tp50()**cyt >> tp50()**cyt + p50(b=None, d=None)**cyt, ksynth_p50) #Comp protein synthesis
 Rule('deg_tp50', tp50() >> None, kdeg_tp50) #Comp transcript degradation
 Rule('deg_p50', p50(b=None, d=None) >> None, kdeg_p50) #Comp protein degradation
-
